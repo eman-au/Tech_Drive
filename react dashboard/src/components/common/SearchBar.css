@@ -1,0 +1,56 @@
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  pointer-events: none;
+}
+
+.search-bar:focus-within .search-bar__icon {
+  color: var(--primary);
+}
+
+.search-bar__input {
+  height: 38px;
+  width: 260px;
+  border: none;
+  border-bottom: 2px solid var(--border);
+  border-radius: 0;
+  padding: 0 14px 0 36px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: transparent;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-bar__input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Animated underline using pseudo on the wrapper */
+.search-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--primary);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.search-bar:focus-within::after {
+  width: 100%;
+}
+
+.search-bar:focus-within .search-bar__input {
+  border-bottom-color: transparent;
+}

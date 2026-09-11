@@ -1,0 +1,213 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/notification_service.dart';
+import 'complaint_screen.dart'; // ✅ NEW
+
+class RatingScreen extends StatefulWidget {
+  final String orderId;
+
+  const RatingScreen({
+    super.key,
+    required this.orderId,
+  });
+
+  @override
+  State<RatingScreen> createState() => _RatingScreenState();
+}
+
+class _RatingScreenState extends State<RatingScreen> {
+  double rating = 5;
+  final commentC = TextEditingController();
+  bool loading = false;
+  String _workerId = '';
+  String _workerName = 'Worker';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWorkerInfo();
+  }
+
+  Future<void> _loadWorkerInfo() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(widget.orderId)
+        .get();
+    setState(() {
+      _workerId = doc['workerId'] ?? '';
+      _workerName = doc['workerName'] ?? 'Worker';
+    });
+  }
+
+  Future<void> submitRating() async {
+    if (loading) return;
+    setState(() => loading = true);
+
+    try {
+      final orderDoc = await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(widget.orderId)
+          .get();
+
+      if (!orderDoc.exists) throw "Order not found";
+
+      final orderData = orderDoc.data()!;
+      final String workerId = orderData['workerId'];
+
+      final firestore = FirebaseFirestore.instance;
+
+      await firestore.collection('ratings').add({
+        "orderId": widget.orderId,
+        "workerId": workerId,
+        "rating": rating,
+        "comment": commentC.text.trim(),
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+
+      final workerRef = firestore.collection('workers').doc(workerId);
+      final workerSnap = await workerRef.get();
+
+      double oldAvg = 0;
+      int totalRatings = 0;
+
+      if (workerSnap.exists) {
+        oldAvg = (workerSnap['avgRating'] ?? 0).toDouble();
+        totalRatings = (workerSnap['totalRatings'] ?? 0);
+      }
+
+      final newTotal = totalRatings + 1;
+      final newAvg = ((oldAvg * totalRatings) + rating) / newTotal;
+
+      await workerRef.set({
+        "avgRating": newAvg,
+        "totalRatings": newTotal,
+      }, SetOptions(merge: true));
+
+      await NotificationService.sendNotification(
+        recipientUid: workerId,
+        title: "Nai Rating Mili! ⭐",
+        body: "Customer ne aapko ${rating.toStringAsFixed(1)} star rating di hai!",
+        data: {"orderId": widget.orderId},
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Thanks for your rating ⭐")),
+        );
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home',
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+
+    if (mounted) setState(() => loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Rate Worker"),
+        backgroundColor: const Color(0xFFCCFD04),
+        foregroundColor: Colors.black,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          children: [
+            const Text(
+              "How was your experience?",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 20),
+
+            Slider(
+              value: rating,
+              min: 1,
+              max: 5,
+              divisions: 4,
+              label: rating.toStringAsFixed(1),
+              onChanged: (value) {
+                setState(() => rating = value);
+              },
+            ),
+
+            Text(
+              "Rating: ${rating.toStringAsFixed(1)} ⭐",
+              style: const TextStyle(fontSize: 16),
+            ),
+
+            const SizedBox(height: 18),
+
+            TextField(
+              controller: commentC,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: "Optional comment...",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ✅ Submit Rating Button
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: loading ? null : submitRating,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFCCFD04),
+                  foregroundColor: Colors.black,
+                ),
+                child: loading
+                    ? const CircularProgressIndicator(color: Colors.black)
+                    : const Text("Submit Rating",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ✅ NEW — Complaint Button
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.report_problem, color: Colors.red),
+                label: const Text("File a Complaint",
+                    style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ComplaintScreen(
+                        orderId: widget.orderId,
+                        otherUserId: _workerId,
+                        otherUserName: _workerName,
+                        complaintBy: 'customer',
+                      ),
+                    ),
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

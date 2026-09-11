@@ -1,0 +1,224 @@
+/* ── Active Bookings Layout ── */
+.bookings {
+  padding: 8px 0;
+}
+
+/* ── Bookings Toolbar Controls ── */
+.bookings__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bookings__toolbar-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 320px;
+}
+
+.bookings-search-wrapper {
+  width: 100%;
+  max-width: 380px;
+}
+
+.bookings__filters {
+  display: flex;
+  gap: 8px;
+}
+
+.bookings-filter-btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.bookings-filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.bookings-filter-btn--active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+/* ── Bookings Table Card ── */
+.bookings-table-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  background: var(--card-bg);
+  overflow: hidden;
+  animation: fadeIn 0.4s ease;
+}
+
+.bookings-data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-data-table th {
+  background: var(--bg);
+  padding: 16px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.bookings-data-table td {
+  padding: 14px 20px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.booking-row-premium {
+  transition: background-color 0.2s ease;
+}
+
+.booking-row-premium:hover td {
+  background-color: var(--bg) !important;
+}
+
+.bookings-data-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* User profiles */
+.bookings-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bookings-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.bookings-provider-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.bookings-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Service tag */
+.bookings-service-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: var(--bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  letter-spacing: 0.3px;
+}
+
+.bookings-service-tag svg {
+  color: var(--text-muted);
+}
+
+/* DateTime Cell */
+.bookings-datetime-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.datetime-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.datetime-date svg {
+  color: var(--primary);
+}
+
+.datetime-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.datetime-time svg {
+  color: var(--text-muted);
+}
+
+/* Amount values */
+.booking-amount-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Responsive breakdowns */
+@media (max-width: 900px) {
+  .bookings__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bookings-search-wrapper {
+    max-width: 100%;
+  }
+
+  .bookings__filters {
+    justify-content: stretch;
+  }
+
+  .bookings-filter-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+  }
+}

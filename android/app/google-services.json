@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "911869093508",
+    "project_id": "techdrive-1495f",
+    "storage_bucket": "techdrive-1495f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911869093508:android:e9031bcdd0006a41cd84d1",
+        "android_client_info": {
+          "package_name": "com.example.tech_drive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911869093508-evrt4girgful6pbmclubuflk2m7ternd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tech_drive",
+            "certificate_hash": "8e4ccd311fcf8501c761b76b2bde6b0096573d6f"
+          }
+        },
+        {
+          "client_id": "911869093508-186fc602dvh7csr9t8ebcq9cvevth5k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn2t29TEUo9zERmuL5zL033Cz7gAibwf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911869093508-186fc602dvh7csr9t8ebcq9cvevth5k8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "911869093508-9727jm2m12btuo2uio3659m07ft4sgk5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.techDrive"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
